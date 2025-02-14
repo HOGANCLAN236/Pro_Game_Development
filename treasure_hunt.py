@@ -35,12 +35,23 @@ class Stone(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (30, 30))
         self.rect = self.image.get_rect()
 
+class Solider(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load("Images/solider.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (40, 40))
+        self.rect = self.image.get_rect()
+
+
+
 #stone has multiple images so setting them up in a list
 images = ["Images/stone1.png", "Images/stone2.png", "Images/stone3.png"]
 
 #create sprite groups
+
 stone_list = pygame.sprite.Group()
 allsprites = pygame.sprite.Group()
+soldieder_list = pygame.sprite.Group()
 
 #create stone sprites
 for i in range(100):
@@ -51,6 +62,15 @@ for i in range(100):
     #adding stone to list
     stone_list.add(stone)
     allsprites.add(stone)
+
+#create solider 
+for i in range(20):
+    soldier = Solider()
+    soldier.rect.x = random.randrange(WIDTH)
+    soldier.rect.y = random.randrange(HEIGHT)
+
+    soldieder_list.add(soldier)
+    allsprites.add(soldier)
 
 #create pirate
 pirate = Pirate()
@@ -104,14 +124,19 @@ while playing:
         
          #check if stone and pirate have collided
         stone_hit_list = pygame.sprite.spritecollide(pirate, stone_list, True)
+        soldier_hit_list = pygame.sprite.spritecollide(pirate, soldieder_list, True)
 
         #check the list of collisions
         for stone in stone_hit_list:
             score += 1
-            text = my_font.render(f"Score ={score}" , True, white)
+            text = my_font.render(f"Score = {score}" , True, white)
+        
+        for soldier in soldier_hit_list:
+            score -= 5
+            text = my_font.render(f"Score = {score}" , True, white)
 
         #printing the score on screen
-        screen.blit(text, (730, 80))
+        screen.blit(text, (600, 50))
 
         #draw all sprites
         allsprites.draw(screen)
